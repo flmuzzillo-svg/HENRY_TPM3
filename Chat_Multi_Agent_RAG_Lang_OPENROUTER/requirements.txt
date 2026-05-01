@@ -1,0 +1,13 @@
+langchain
+langchain-openai
+langchain-huggingface
+sentence-transformers
+langchain-community
+langchain-core
+langfuse
+pydantic
+python-dotenv
+faiss-cpu
+tiktoken
+unstructured
+markdown

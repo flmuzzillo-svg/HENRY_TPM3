@@ -1,0 +1,110 @@
+[
+  {
+    "query": "¿Cuál es el procedimiento para abrir una nueva vacante en la empresa?",
+    "expected_domain": "HR",
+    "in_scope": true,
+    "note": "Respondida en rrhh.md - Sección Reclutamiento y Selección, Pregunta 1"
+  },
+  {
+    "query": "¿Cómo se maneja la confidencialidad de los datos de los postulantes durante el proceso de selección?",
+    "expected_domain": "HR",
+    "in_scope": true,
+    "note": "Respondida en rrhh.md - Pregunta 2"
+  },
+  {
+    "query": "¿Qué criterios se usan para seleccionar al candidato final entre varios postulantes?",
+    "expected_domain": "HR",
+    "in_scope": true,
+    "note": "Respondida en rrhh.md - Pregunta 3: matriz de decisión con 4 criterios"
+  },
+  {
+    "query": "¿Qué metodologías ágiles utiliza el equipo de desarrollo para garantizar la entrega continua?",
+    "expected_domain": "IT",
+    "in_scope": true,
+    "note": "Respondida en tecnica.md - Pregunta 1: Scrum, Kanban, CI/CD"
+  },
+  {
+    "query": "¿Cómo se gestiona el control de versiones y la revisión de código en los proyectos?",
+    "expected_domain": "IT",
+    "in_scope": true,
+    "note": "Respondida en tecnica.md - Pregunta 2: Git, Gitflow, Pull Requests"
+  },
+  {
+    "query": "¿Qué pasos se siguen cuando ocurre un incidente crítico en producción?",
+    "expected_domain": "IT",
+    "in_scope": true,
+    "note": "Respondida en tecnica.md - Pregunta 3: S1, Incident Commander, Post-Mortem"
+  },
+  {
+    "query": "¿Cómo se estructura el proceso de presupuesto anual en la compañía?",
+    "expected_domain": "FINANCE",
+    "in_scope": true,
+    "note": "Respondida en finanzas.md - Pregunta 1: Zero-Based Budgeting"
+  },
+  {
+    "query": "¿Cuál es la diferencia entre el presupuesto anual y el forecast trimestral?",
+    "expected_domain": "FINANCE",
+    "in_scope": true,
+    "note": "Respondida en finanzas.md - Pregunta 2"
+  },
+  {
+    "query": "¿Cuáles son los KPIs financieros más importantes que monitorea la gerencia?",
+    "expected_domain": "FINANCE",
+    "in_scope": true,
+    "note": "Respondida en finanzas.md - Pregunta 3: EBITDA, Margen Bruto, ROE, etc."
+  },
+  {
+    "query": "¿Cuántas revisiones de pares requiere un Pull Request antes de ser aprobado?",
+    "expected_domain": "IT",
+    "in_scope": true,
+    "note": "Respondida en tecnica.md - Pregunta 2: al menos dos pares"
+  },
+  {
+    "query": "¿Qué pasa con los datos personales de un candidato que no fue seleccionado?",
+    "expected_domain": "HR",
+    "in_scope": true,
+    "note": "Respondida en rrhh.md - Pregunta 2: se conservan máximo 2 años"
+  },
+  {
+    "query": "¿Cuál es el rol del Incident Commander cuando hay una caída en producción?",
+    "expected_domain": "IT",
+    "in_scope": true,
+    "note": "Respondida en tecnica.md - Pregunta 3: coordina comunicación y tareas de mitigación"
+  },
+  {
+    "query": "¿Cuándo se inicia el proceso de presupuesto para el año siguiente?",
+    "expected_domain": "FINANCE",
+    "in_scope": true,
+    "note": "Respondida en finanzas.md - Pregunta 1: tercer trimestre del año fiscal previo"
+  },
+  {
+    "query": "¿Cuál es el menú de la cantina para esta semana?",
+    "expected_domain": "UNKNOWN",
+    "in_scope": false,
+    "note": "Fuera de alcance: no está en ninguno de los documentos"
+  },
+  {
+    "query": "¿A qué hora sale el próximo vuelo a Buenos Aires?",
+    "expected_domain": "UNKNOWN",
+    "in_scope": false,
+    "note": "Fuera de alcance: información de vuelos, no corporativa"
+  },
+  {
+    "query": "¿Cuál es el pronóstico del tiempo para mañana en la ciudad?",
+    "expected_domain": "UNKNOWN",
+    "in_scope": false,
+    "note": "Fuera de alcance: información meteorológica"
+  },
+  {
+    "query": "¿Puedes recomendarme películas de ciencia ficción para ver este fin de semana?",
+    "expected_domain": "UNKNOWN",
+    "in_scope": false,
+    "note": "Fuera de alcance: entretenimiento personal"
+  },
+  {
+    "query": "¿Cómo instalo Python 3.13 en Windows?",
+    "expected_domain": "UNKNOWN",
+    "in_scope": false,
+    "note": "Fuera de alcance: soporte técnico externo, no corporativo"
+  }
+]

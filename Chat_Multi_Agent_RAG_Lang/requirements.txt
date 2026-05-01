@@ -1,0 +1,11 @@
+langchain
+langchain-openai
+langchain-community
+langchain-core
+langfuse
+pydantic
+python-dotenv
+faiss-cpu
+tiktoken
+unstructured
+markdown

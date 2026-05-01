@@ -1,0 +1,8 @@
+.venv/
+Chat_Multi_Agent_RAG_Lang/.env
+Chat_Multi_Agent_RAG_Lang_OPENROUTER/.env
+**/__pycache__/
+**/*.py[cod]
+**/*.faiss
+**/*.pkl
+.DS_Store

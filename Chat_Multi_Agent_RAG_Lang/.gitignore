@@ -1,0 +1,28 @@
+# Variables de entorno (NO subir claves API)
+.env
+
+# Entornos virtuales
+venv/
+.venv/
+env/
+
+# Índices FAISS generados (pueden ser grandes)
+data/faiss_index*/
+*.faiss
+*.pkl
+
+# Cache de Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# IDEs
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
