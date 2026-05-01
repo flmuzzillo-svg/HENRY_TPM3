@@ -11,3 +11,6 @@ faiss-cpu
 tiktoken
 unstructured
 markdown
+fastapi
+uvicorn
+python-multipart

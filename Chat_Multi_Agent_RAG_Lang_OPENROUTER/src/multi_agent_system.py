@@ -40,30 +40,11 @@ def evaluate_response(trace_id: str, score: float, comment: str = ""):
             comment=comment
         )
 
-async def main():
-    # Inicializar Langfuse CallbackHandler para trace
-    langfuse_handler = CallbackHandler()
-    
-    # Rutas base
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    data_dir = os.path.join(base_dir, "data")
-    vs_dir = os.path.join(base_dir, "vector_stores")
-    
-    # Inicializar Agentes RAG (esto bloquea la primera vez mientras genera índices, luego es instantáneo)
-    agents = {
-        "HR": HRAgent(data_dir=data_dir, vs_dir=vs_dir),
-        "IT": TechAgent(data_dir=data_dir, vs_dir=vs_dir),
-        "FINANCE": FinanceAgent(data_dir=data_dir, vs_dir=vs_dir)
-    }
-    
-    router = RouterAgent()
-    
-    import json
-    
-    # Cargar consultas de prueba
-    test_queries_path = os.path.join(data_dir, "test_queries.json")
-    with open(test_queries_path, "r", encoding="utf-8") as f:
-        test_queries = json.load(f)
+async def run_automated_tests(agents, router, test_queries, langfuse_handler):
+    """Ejecuta la batería de pruebas automáticas."""
+    print("\n" + "="*50)
+    print(" INICIANDO BATERÍA DE PRUEBAS AUTOMÁTICAS")
+    print("="*50)
     
     for query_info in test_queries:
         query = query_info["query"]
@@ -80,15 +61,97 @@ async def main():
             safe_response = response.encode('utf-8', errors='replace').decode('utf-8')
             print(f"[Respuesta] {safe_response}")
             
-            # Bonus: Evaluar (ejemplo hardcodeado de score 9/10 para ilustrar)
             # Extraemos el trace_id del handler actual
             trace_id = getattr(langfuse_handler, "last_trace_id", None) or getattr(langfuse_handler, "get_trace_id", lambda: None)()
             if trace_id:
-                evaluate_response(trace_id=trace_id, score=9.0, comment="Respuesta evaluada automáticamente.")
+                evaluate_response(trace_id=trace_id, score=9.0, comment="Prueba automática.")
         else:
             print("[Respuesta] Lo siento, no puedo ayudarte con esa consulta ya que no pertenece a HR, IT o FINANCE.")
+
+async def interactive_mode(agents, router, langfuse_handler):
+    """Permite al usuario ingresar consultas manualmente."""
+    print("\n" + "="*50)
+    print(" MODO INTERACTIVO HABILITADO")
+    print(" Escribe 'salir' para terminar")
+    print("="*50)
+    
+    while True:
+        try:
+            # En Windows, input() puede tener problemas con UTF-8, pero el wrapper de sys.stdout ayuda
+            query = input("\nPregunta: ").strip()
+            
+            if query.lower() in ["salir", "exit", "quit"]:
+                break
+            
+            if not query:
+                continue
+                
+            # Enrutar la consulta
+            intent = await router.aroute(query, callbacks=[langfuse_handler])
+            print(f"[Router] Intención detectada: {intent}")
+            
+            # Procesar con el agente correcto
+            if intent in agents:
+                response = await agents[intent].aquery(query, callbacks=[langfuse_handler])
+                safe_response = response.encode('utf-8', errors='replace').decode('utf-8')
+                print(f"[Respuesta] {safe_response}")
+            else:
+                print("[Respuesta] Lo siento, no puedo ayudarte con esa consulta ya que no pertenece a HR, IT o FINANCE.")
+                
+        except KeyboardInterrupt:
+            break
+        except Exception as e:
+            print(f"[Error] {e}")
+
+async def main():
+    # Inicializar Langfuse CallbackHandler para trace
+    langfuse_handler = CallbackHandler()
+    
+    # Rutas base
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    data_dir = os.path.join(base_dir, "data")
+    vs_dir = os.path.join(base_dir, "vector_stores")
+    
+    # Inicializar Agentes RAG
+    agents = {
+        "HR": HRAgent(data_dir=data_dir, vs_dir=vs_dir),
+        "IT": TechAgent(data_dir=data_dir, vs_dir=vs_dir),
+        "FINANCE": FinanceAgent(data_dir=data_dir, vs_dir=vs_dir)
+    }
+    
+    router = RouterAgent()
+    
+    import json
+    
+    # Cargar consultas de prueba
+    test_queries_path = os.path.join(data_dir, "test_queries.json")
+    test_queries = []
+    if os.path.exists(test_queries_path):
+        with open(test_queries_path, "r", encoding="utf-8") as f:
+            test_queries = json.load(f)
+    
+    while True:
+        print("\n" + "="*50)
+        print("SISTEMA MULTI-AGENTE RAG - MENÚ PRINCIPAL")
+        print("="*50)
+        print("1. Ejecutar batería de pruebas automáticas (Test)")
+        print("2. Iniciar consultoría interactiva (Chat)")
+        print("3. SALIR")
+        print("="*50)
         
-    # Flush langfuse al final (compatible con v2/v3/v4)
+        opcion = input("Seleccione una opción (1-3): ").strip()
+        
+        if opcion == "1":
+            await run_automated_tests(agents, router, test_queries, langfuse_handler)
+        elif opcion == "2":
+            await interactive_mode(agents, router, langfuse_handler)
+        elif opcion == "3" or opcion.lower() == "salir":
+            print("Saliendo del sistema...")
+            break
+        else:
+            print("[!] Opción no válida. Por favor, intente de nuevo.")
+        
+    # Flush langfuse al final
     if hasattr(langfuse_handler, 'flush'):
         langfuse_handler.flush()
     langfuse.flush()
