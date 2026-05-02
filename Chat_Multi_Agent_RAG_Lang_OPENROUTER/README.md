@@ -1,51 +1,70 @@
-# Multi-Agent RAG System (OpenRouter + Web Interface)
+# Sistema Multi-Agente RAG (Version OpenRouter + Web Interface)
 
-Esta es la versión mejorada y migrada del sistema Multi-Agente RAG, optimizada para el uso de modelos a través de **OpenRouter** y con una **Interfaz Web** moderna.
+## Descripcion del Proyecto
 
-## ✨ Mejoras y Funcionalidades
-- **Independencia de OpenAI**: Utiliza OpenRouter para acceder a una variedad de modelos y **HuggingFace Embeddings** locales para procesar vectores sin costo adicional de API.
-- **Interfaz Web Premium**: Chat interactivo con diseño Glassmorphism, animaciones y etiquetas de dominio.
-- **Menú de Consola**: Selector interactivo para correr tests automáticos o entrar en modo consultoría.
-- **Modernización LCEL**: Implementación total con LangChain Expression Language para mayor robustez.
+Esta es la implementación optimizada del ecosistema Multi-Agente RAG. Se caracteriza por su flexibilidad al utilizar **OpenRouter** como puerta de enlace a múltiples LLMs y por reducir drásticamente los costos mediante el uso de **Embeddings locales de HuggingFace**. Además, ofrece una experiencia de usuario completa a través de una interfaz web moderna construida con FastAPI.
 
-## 🛠️ Stack Tecnológico
-- **LLM**: OpenRouter (GPT-4o / Otros)
-- **Embeddings**: HuggingFace (`all-MiniLM-L6-v2`) - *Ejecución Local*
-- **Backend**: FastAPI
-- **Frontend**: Vanilla JS / CSS (Glassmorphism)
-- **Framework**: LangChain (LCEL)
-- **Observabilidad**: Langfuse
+## Arquitectura del Sistema
 
-## 📋 Requisitos Previos
-1. Python 3.9+
-2. Claves de API:
-   - `OPENROUTER_API_KEY`
-   - `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, `LANGFUSE_HOST`
+```
+[Cliente Web / Consola] 
+         |
+         v
+   [FastAPI Server]
+         |
+         v
+ [Orquestador RAG] --> [HuggingFace Embeddings (Local)] --> [OpenRouter API]
+```
 
-## ⚙️ Instalación
-1. Instalar dependencias:
-   ```bash
-   pip install -r requirements.txt
-   ```
-2. Configurar el archivo `.env`.
+## Stack Tecnologico
 
-## 🏃 Cómo usarlo
+| Componente | Tecnologia |
+|---|---|
+| API Provider | OpenRouter |
+| Embeddings | HuggingFace `all-MiniLM-L6-v2` (Local) |
+| Generacion | `gpt-4o` / `claude-3` (vía OpenRouter) |
+| Backend | FastAPI |
+| Frontend | Vanilla HTML/CSS/JS (Glassmorphism) |
+| Vector Store | FAISS |
+| Observabilidad | Langfuse |
 
-### Modo Consola (Con Menú)
-Ejecuta el sistema principal para acceder a los tests automáticos o al chat por terminal:
+## Setup — Instalacion
+
+### Paso 1: Dependencias
+```bash
+pip install -r requirements.txt
+```
+
+### Paso 2: Variables de Entorno
+```bash
+# Crea un archivo .env con:
+OPENROUTER_API_KEY=tu_clave
+LANGFUSE_PUBLIC_KEY=tu_clave
+LANGFUSE_SECRET_KEY=tu_clave
+LANGFUSE_HOST=https://cloud.langfuse.com
+```
+
+## Ejecucion
+
+### Opcion A: Consola Interactiva
+Inicia el menú interactivo para ejecutar tests o chatear:
 ```bash
 python src/multi_agent_system.py
 ```
 
-### Modo Web (Interfaz Gráfica)
-Inicia el servidor de FastAPI:
+### Opcion B: Interfaz Web
+Levanta el servidor para usar el chat en el navegador:
 ```bash
 uvicorn src.app:app --reload
 ```
-Luego abre [http://localhost:8000](http://localhost:8000) en tu navegador.
+Accede en: [http://localhost:8000](http://localhost:8000)
 
-## 📂 Estructura
-- `src/app.py`: Servidor web y API.
-- `static/`: Interfaz de usuario (HTML/CSS/JS).
-- `src/agents/`: Lógica de agentes especializados.
-- `data/test_queries.json`: Dataset de pruebas balanceado.
+## Diferencias Clave (vs Versión Original)
+- **Costo Cero en Embeddings**: Al procesar los vectores localmente con HuggingFace, no hay consumo de cuotas de API por indexación.
+- **Interoperabilidad**: Fácil cambio de modelo (GPT, Claude, Llama) sin tocar la lógica central.
+- **UX**: Chat con burbujas, estados de carga y etiquetas de dominio.
+
+## Justificacion de la Estrategia
+- **HuggingFace Local**: Se seleccionó `all-MiniLM-L6-v2` por su balance entre precisión semántica y bajo consumo de memoria (384 dimensiones).
+- **FastAPI**: Elegido por su soporte nativo de asincronía, lo que permite manejar múltiples consultas concurrentes a los agentes RAG sin bloquear el hilo principal.
+- **OpenRouter**: Permite evitar el vendor lock-in y optimizar la elección del modelo según la complejidad de la consulta.

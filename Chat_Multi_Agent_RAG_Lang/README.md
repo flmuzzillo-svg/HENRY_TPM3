@@ -1,43 +1,57 @@
-# Multi-Agent RAG System (OpenAI Version)
+# Sistema Multi-Agente RAG (Version OpenAI)
 
-Este proyecto implementa un sistema RAG (Retrieval-Augmented Generation) avanzado utilizando una arquitectura de múltiples agentes especializados para responder consultas corporativas.
+## Descripcion del Proyecto
 
-## 🚀 Características
-- **Orquestador Inteligente**: Clasifica la intención del usuario y deriva la consulta al agente experto (HR, IT o Finanzas).
-- **Agentes Especializados**: Cada agente posee su propio Vector Store basado en documentación específica.
-- **Observabilidad con Langfuse**: Trazabilidad completa de las cadenas de pensamiento y llamadas a la API.
-- **Evaluación**: Sistema integrado para calificar la calidad de las respuestas.
+Este proyecto implementa un sistema RAG avanzado que utiliza agentes especializados para responder consultas sobre Recursos Humanos, Finanzas y Tecnología. Utiliza el stack nativo de OpenAI para garantizar la máxima coherencia y facilidad de integración. El flujo se basa en un orquestador que clasifica la intención y activa la cadena RAG del agente correspondiente.
 
-## 🛠️ Stack Tecnológico
-- **LLM**: OpenAI (GPT-4o)
-- **Embeddings**: OpenAI Embeddings
-- **Framework**: LangChain (LCEL)
-- **Vector Store**: FAISS
-- **Observabilidad**: Langfuse
+## Arquitectura
 
-## 📋 Requisitos Previos
-1. Python 3.9+
-2. Claves de API:
-   - `OPENAI_API_KEY`
-   - `LANGFUSE_PUBLIC_KEY`
-   - `LANGFUSE_SECRET_KEY`
-   - `LANGFUSE_HOST`
+```
+Usuario -> Orquestador (GPT-4o) -> Agente Experto (RAG) -> Respuesta
+                                        |
+                            [FAISS Store + Contexto MD]
+```
 
-## ⚙️ Instalación
-1. Clonar el repositorio.
-2. Instalar dependencias:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Configurar el archivo `.env` con tus credenciales.
+## Stack Tecnologico
 
-## 🏃 Ejecución
-Para ejecutar las pruebas automáticas y el sistema:
+| Componente | Tecnologia |
+|---|---|
+| API Provider | OpenAI |
+| Embeddings | OpenAI `text-embedding-3-small` |
+| Generacion | `gpt-4o` |
+| Vector Store | FAISS |
+| Framework | LangChain (LCEL) |
+| Observabilidad | Langfuse |
+
+## Configuracion e Instalacion
+
+### Paso 1: Dependencias
+```bash
+pip install -r requirements.txt
+```
+
+### Paso 2: Variables de Entorno
+Configura tu archivo `.env`:
+```env
+OPENAI_API_KEY=tu_clave_aqui
+LANGFUSE_PUBLIC_KEY=tu_clave
+LANGFUSE_SECRET_KEY=tu_clave
+LANGFUSE_HOST=https://cloud.langfuse.com
+```
+
+## Ejecucion
+
+Para ejecutar las pruebas automáticas del sistema:
 ```bash
 python src/multi_agent_system.py
 ```
 
-## 📂 Estructura del Proyecto
-- `data/`: Contiene los documentos Markdown con el conocimiento de dominio.
-- `src/agents/`: Implementación modular de los agentes y el orquestador.
-- `vector_stores/`: Índices FAISS generados automáticamente.
+## Justificacion de Herramientas
+
+- **FAISS**: Elegido por su velocidad extrema en búsquedas de similitud vectorial de forma local, ideal para conjuntos de datos corporativos de tamaño medio.
+- **LCEL (LangChain Expression Language)**: Permite una composición de cadenas más clara, manejo de streaming nativo y trazabilidad automática.
+- **Langfuse**: Proporciona un dashboard detallado para auditar los costos de tokens y la latencia de cada agente.
+
+## Metricas de Calidad
+- **Indexacion**: Se procesan múltiples archivos Markdown (`preguntas_*.md`).
+- **Evaluacion**: Incluye un script de evaluación que registra scores automáticos en Langfuse basados en la relevancia de la respuesta.
